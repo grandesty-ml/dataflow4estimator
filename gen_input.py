@@ -28,7 +28,7 @@ def parse_fn(data):
 
     string = datum.string
     strings = tuple(datum.strings)
-    return tuple([image, images, label, labels, value, values, string, strings])
+    return (image, images, label, labels, value, values, string, strings)
 
 
 def train_input(path):
@@ -40,12 +40,12 @@ def train_input(path):
     lmdb_dataset = tp.MultiProcessMapDataZMQ(lmdb_dataset, 16, parse_fn)
     lmdb_dataset.reset_state()
     dataset = tf.data.Dataset.from_generator(
-        lambda: tuple(lmdb_dataset.get_data()),
+        lmdb_dataset.get_data,
         (tf.float32, tf.float32, tf.int64, tf.int64, tf.float32, tf.float32,
          tf.string, tf.string))
     dataset = dataset.apply(
         tf.data.experimental.map_and_batch(
-            map_func=lambda *x: tuple([x[:2], x[2:]]), batch_size=16,
+            map_func=lambda *x: ([x[:2], x[2:]]), batch_size=16,
             drop_remainder=True, num_parallel_calls=32))
     return dataset.prefetch(-1)
 
@@ -59,11 +59,11 @@ def eval_input(path):
     lmdb_dataset = tp.MultiProcessRunnerZMQ(lmdb_dataset, 1)
     lmdb_dataset.reset_state()
     dataset = tf.data.Dataset.from_generator(
-        lambda: tuple(lmdb_dataset.get_data()),
+        lmdb_dataset.get_data,
         (tf.float32, tf.float32, tf.int64, tf.int64, tf.float32, tf.float32,
          tf.string, tf.string))
     dataset = dataset.apply(
         tf.data.experimental.map_and_batch(
-            map_func=lambda *x: tuple([x[:2], x[2:]]), batch_size=1,
+            map_func=lambda *x: ([x[:2], x[2:]]), batch_size=1,
             drop_remainder=False, num_parallel_calls=32))
     return dataset.prefetch(-1)
