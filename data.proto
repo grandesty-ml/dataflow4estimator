@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message Datum {
+    // test image
+    bytes image = 10;
+    repeated bytes images = 11;
+
+    // test int
+    int32 label = 20;
+    repeated int32 labels = 21;
+
+    // test float
+    float value = 30;
+    repeated float values = 31;
+
+    // test string
+    string string = 40;
+    repeated string strings = 41;
+}
