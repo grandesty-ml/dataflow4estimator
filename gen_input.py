@@ -38,6 +38,7 @@ def train_input(path):
     lmdb_dataset = tp.LocallyShuffleData(lmdb_dataset, 256)
     lmdb_dataset = tp.RepeatedData(lmdb_dataset, -1)
     lmdb_dataset = tp.MultiProcessMapDataZMQ(lmdb_dataset, 16, parse_fn)
+    lmdb_dataset = tp.MapData(lmdb_dataset, tuple)
     lmdb_dataset.reset_state()
     dataset = tf.data.Dataset.from_generator(
         lmdb_dataset.get_data,
@@ -57,6 +58,7 @@ def eval_input(path):
     lmdb_dataset = tp.RepeatedData(lmdb_dataset, 1)
     lmdb_dataset = tp.MultiThreadMapData(lmdb_dataset, 8, parse_fn, strict=True)
     lmdb_dataset = tp.MultiProcessRunnerZMQ(lmdb_dataset, 1)
+    lmdb_dataset = tp.MapData(lmdb_dataset, tuple)
     lmdb_dataset.reset_state()
     dataset = tf.data.Dataset.from_generator(
         lmdb_dataset.get_data,
