@@ -6,7 +6,7 @@ This is a test of tensorpack.dataflow for tensorflow.estimator
 
 - python 3.6
 - tensorflow 1.13.1
-- tensorpack 0.9.7.0
+- tensorpack 0.9.7.1
 
 ## Running
 

@@ -52,7 +52,7 @@ def train_input(path):
 
 def eval_input(path):
     paths = [f for f in glob.glob(path + '/*')]
-    lmdb_dataset = [tp.LMDBData(f, True) for f in paths]
+    lmdb_dataset = [tp.LMDBData(f, False) for f in paths]
     lmdb_dataset = tp.ConcatData(lmdb_dataset)
     lmdb_dataset = tp.RepeatedData(lmdb_dataset, 1)
     lmdb_dataset = tp.MultiThreadMapData(lmdb_dataset, 8, parse_fn, strict=True)
